@@ -1,5 +1,6 @@
-#ifndef pett_definitions_h
-#define pett_definitions_h
+#ifndef healg_definitions_hpp
+
+#define healg_definitions_hpp
 
 #define ESP32_TOUCH_PIN_0  4
 #define ESP32_TOUCH_PIN_2  2
@@ -10,5 +11,10 @@
 #define ESP32_TOUCH_PIN_7  27
 #define ESP32_TOUCH_PIN_8  33
 #define ESP32_TOUCH_PIN_9  32
+
+#define ESP32_I2C_SDA_PIN  21
+#define ESP32_I2C_SCL_PIN  22
+
+#define ESP32_IRQ_PIN  34
 
 #endif

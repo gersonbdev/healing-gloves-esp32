@@ -1,11 +1,27 @@
 #include <Arduino.h>
-#include "healg_definitions.h"
+#include <Wire.h>
+#include <Adafruit_MPR121.h>
 
-void setup() {
-        Serial.begin(9600);
+#include "healg_definitions.hpp"
+#include "healg_sensor_tasks.hpp"
+
+
+void setup()
+{
+        Serial.begin(9600);  
+
+        xTaskCreate(
+                mpr121_task,
+                "MPR121 task",
+                2000,
+                NULL,
+                1,
+                NULL
+        );      
 }
 
-void loop() {
-        Serial.println(touchRead(15));
-        delay(100);
+
+void loop()
+{
+
 }
