@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "healg_definitions.h": "c"
+        "healg_definitions.h": "c",
+        "system_error": "cpp"
     }
 }

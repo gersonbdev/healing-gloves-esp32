@@ -2,6 +2,11 @@
 
 #define healg_definitions_hpp
 
+#define CHIEF_TYPE_DEVICE  1
+#define WORKER_TYPE_DEVICE 2
+
+#define HEALG_DEVICE_TYPE CHIEF_TYPE_DEVICE
+
 #define ESP32_TOUCH_PIN_0  4
 #define ESP32_TOUCH_PIN_2  2
 #define ESP32_TOUCH_PIN_3  15

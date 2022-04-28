@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <BluetoothSerial.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_MPR121.h>
 #include <Adafruit_MPU6050.h>
@@ -8,10 +9,12 @@
 #include "healg_sensor_functions.hpp"
 #include "healg_sensor_tasks.hpp"
 
+BluetoothSerial SerialBT;
 
 void setup()
 {
         Serial.begin(115200);
+        SerialBT.begin("HealingGlovesRigth");
 
         xTaskCreate(
                 mpr121_task,

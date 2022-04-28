@@ -6,7 +6,16 @@
 
 #include "healg_definitions.hpp"
 #include "healg_sensor_functions.hpp"
+#include "healg_communication_functions.hpp"
 #include "healg_sensor_tasks.hpp"
+
+
+void communication_task(void * pvParameters)
+{
+        while (1) {
+
+        }
+}
 
 void mpr121_task(void * pvParameters)
 {        
@@ -22,48 +31,8 @@ void mpr121_task(void * pvParameters)
 
         while (1) {                
                 if (mpr121_status) {
-                        Serial.println();
-                        Serial.println("\t --- Begin --- ");
-                        Serial.println();
-                        // Get the currently touched pads
-                        currtouched = mpr121_sensor.touched();
-
-                        Serial.println(currtouched);
-
-                        for (uint8_t i=0; i<12; i++) {
-                        // it if *is* touched and *wasnt* touched before, alert!
-                        if ((currtouched & _BV(i)) && !(lasttouched & _BV(i)) ) {
-                        Serial.print(i); Serial.println(" touched");
-                        }
-                        // if it *was* touched and now *isnt*, alert!
-                        if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-                        Serial.print(i); Serial.println(" released");
-                        }
-                        }
-
-                        // reset our state
-                        lasttouched = currtouched;
-
-                        //delay(200);
-
-                        // comment out this line for detailed data from the sensor!
-                        //return;
-
-                        // debugging info, what
-                        Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(mpr121_sensor.touched(), HEX);
-                        Serial.print("Filt: ");
-                        for (uint8_t i=0; i<12; i++) {
-                        Serial.print(mpr121_sensor.filteredData(i)); Serial.print("\t");
-                        }
-                        Serial.println();
-                        Serial.print("Base: ");
-                        for (uint8_t i=0; i<12; i++) {
-                        Serial.print(mpr121_sensor.baselineData(i)); Serial.print("\t");
-                        }
-
-                        Serial.println();
-                        Serial.println("\t --- End --- ");
-                        Serial.println();
+                        send_data_from_mpr121_by_bluetooth(&mpr121_sensor);
+                        
                 } else {
                         mpr121_status = set_mpr121_initialization(
                                 &mpr121_sensor, 0x5A);
