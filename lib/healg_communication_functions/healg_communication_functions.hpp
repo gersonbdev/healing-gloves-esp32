@@ -6,6 +6,9 @@
 
 void send_string_via_bluetooth(String *message);
 
-void send_data_from_mpr121_by_bluetooth(Adafruit_MPR121 *module);
+void send_data_from_mpr121_by_bluetooth(
+        struct Mpr121Data *module_data,
+        uint8_t device_type
+);
 
 #endif

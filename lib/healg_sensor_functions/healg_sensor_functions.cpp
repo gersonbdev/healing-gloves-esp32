@@ -25,6 +25,15 @@ uint8_t set_mpr121_initialization(Adafruit_MPR121 *module, uint8_t i2c_address)
         }        
 }
 
+
+void save_data_from_mpr121(Adafruit_MPR121 *module, struct Mpr121Data *module_data)
+{        
+        for (uint8_t i=0; i<12; i++) {
+                (*module_data).pin[i] = (*module).filteredData(i);
+        }
+}
+
+
 uint8_t set_mpu6050_initialization(Adafruit_MPU6050 *module, uint8_t i2c_address)
 {
         Serial.println("MPU6050 test!");

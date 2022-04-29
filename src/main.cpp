@@ -15,28 +15,27 @@ void setup()
 {
         Serial.begin(115200);
         SerialBT.begin("HealingGlovesRigth");
+        // xTaskCreate(
+        //         mpr121_task,
+        //         "MPR121 task",
+        //         2000,
+        //         NULL,
+        //         1,
+        //         NULL
+        // );
 
-        xTaskCreate(
-                mpr121_task,
-                "MPR121 task",
-                2000,
-                NULL,
-                1,
-                NULL
-        );
-
-        xTaskCreate(
-                mpu6050_task,
-                "MPU6050 task",
-                2000,
-                NULL,
-                1,
-                NULL
-        );   
+        // xTaskCreate(
+        //         mpu6050_task,
+        //         "MPU6050 task",
+        //         2000,
+        //         NULL,
+        //         1,
+        //         NULL
+        // );   
 }
 
 
 void loop()
 {
-        
+        mpr121_task();
 }

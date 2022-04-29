@@ -9,37 +9,28 @@
 #include "healg_communication_functions.hpp"
 #include "healg_sensor_tasks.hpp"
 
+Adafruit_MPR121 mpr121_sensor = Adafruit_MPR121();
+struct Mpr121Data mpr121_data;
 
-void communication_task(void * pvParameters)
+boolean mpr121_status = false;
+
+void mpr121_task()
 {
-        while (1) {
+        if (mpr121_status) {
+                save_data_from_mpr121(&mpr121_sensor, &mpr121_data);
 
+                send_data_from_mpr121_by_bluetooth(
+                        &mpr121_data,
+                        HEALG_DEVICE_TYPE
+                );
+                
+        } else {
+                mpr121_status = set_mpr121_initialization(
+                        &mpr121_sensor, 0x5A);
         }
-}
 
-void mpr121_task(void * pvParameters)
-{        
-        Adafruit_MPR121 mpr121_sensor = Adafruit_MPR121();
-        boolean mpr121_status = false;
+        delay(10);
 
-        // Keeps track of the last pins touched
-        // so we know when buttons are 'released'11
-        uint16_t lasttouched = 0;
-        uint16_t currtouched = 0;
-        
-        mpr121_status = set_mpr121_initialization(&mpr121_sensor, 0x5A);
-
-        while (1) {                
-                if (mpr121_status) {
-                        send_data_from_mpr121_by_bluetooth(&mpr121_sensor);
-                        
-                } else {
-                        mpr121_status = set_mpr121_initialization(
-                                &mpr121_sensor, 0x5A);
-                }
-
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
-        }
 }
 
 
