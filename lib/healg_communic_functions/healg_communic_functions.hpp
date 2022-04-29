@@ -1,6 +1,6 @@
-#ifndef healg_communication_functions_hpp
+#ifndef healg_communic_functions_hpp
 
-#define healg_communication_functions_hpp
+#define healg_communic_functions_hpp
 
 #define DATA_MESSAGE_TYPE_MPR121 1
 

@@ -1,13 +1,13 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <BluetoothSerial.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_MPR121.h>
 #include <Adafruit_MPU6050.h>
-#include <BluetoothSerial.h>
 
 #include "healg_definitions.hpp"
 #include "healg_sensor_functions.hpp"
-#include "healg_communication_functions.hpp"
+#include "healg_communic_functions.hpp"
 
 extern BluetoothSerial SerialBT;
 

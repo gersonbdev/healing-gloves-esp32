@@ -6,43 +6,56 @@
 
 #include "healg_definitions.hpp"
 #include "healg_sensor_functions.hpp"
-#include "healg_communication_functions.hpp"
-#include "healg_sensor_tasks.hpp"
+#include "healg_communic_functions.hpp"
+#include "healg_sensor_communic_tasks.hpp"
 
-Adafruit_MPR121 mpr121_sensor = Adafruit_MPR121();
+Adafruit_MPR121 mpr121_sensor;
 struct Mpr121Data mpr121_data;
-
 boolean mpr121_status = false;
 
-void mpr121_task()
+void mpr121_communic_task()
 {
-        if (mpr121_status) {
-                save_data_from_mpr121(&mpr121_sensor, &mpr121_data);
-
-                send_data_from_mpr121_by_bluetooth(
-                        &mpr121_data,
-                        HEALG_DEVICE_TYPE
-                );
-                
-        } else {
+        if (!mpr121_status) {
                 mpr121_status = set_mpr121_initialization(
-                        &mpr121_sensor, 0x5A);
+                        &mpr121_sensor,
+                        0x5A
+                );
         }
 
-        delay(10);
+        switch (HEALG_DEVICE_TYPE) {
+        case CHIEF_TYPE_DEVICE:
+                if (mpr121_status) {
+                        save_data_from_mpr121(&mpr121_sensor, &mpr121_data);
 
+                        send_data_from_mpr121_by_bluetooth(
+                                &mpr121_data,
+                                HEALG_DEVICE_TYPE
+                        );
+                }
+                break;        
+        default:
+                break;
+        }
 }
 
+Adafruit_MPU6050 mpu6050_sensor;
+boolean mpu6050_status = false;
 
-void mpu6050_task(void * pvParameters)
+void mpu6050_communic_task()
 {
-        Adafruit_MPU6050 mpu6050_sensor;
-        boolean mpu6050_status = false;
+        if (!mpu6050_status) {
+                mpu6050_status = set_mpu6050_initialization(
+                        &mpu6050_sensor,
+                        0x68
+                );
 
-        mpu6050_status = set_mpu6050_initialization(&mpu6050_sensor, 0x68);
-        set_mpu6050_calibration(&mpu6050_sensor);
+                if (mpu6050_status) {
+                        set_mpu6050_calibration(&mpu6050_sensor);
+                }
+        }
 
-        while (1) {
+        switch (HEALG_DEVICE_TYPE) {
+        case CHIEF_TYPE_DEVICE:
                 if (mpu6050_status) {
                         /* Get new sensor events with the readings */
                         sensors_event_t a, g, temp;
@@ -70,11 +83,9 @@ void mpu6050_task(void * pvParameters)
                         Serial.println(" degC");
 
                         Serial.println("");
-                } else {
-                        mpu6050_status = set_mpu6050_initialization(
-                                &mpu6050_sensor, 0x68);
                 }
-
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                break;        
+        default:
+                break;
         }
 }

@@ -10,8 +10,6 @@
 
 uint8_t set_mpr121_initialization(Adafruit_MPR121 *module, uint8_t i2c_address)
 {
-        Serial.println("MPR121 test!");
-
         if ((*module).begin(i2c_address)) {
                 Serial.println("MPR121 found!");
                 Serial.println("");
@@ -36,15 +34,13 @@ void save_data_from_mpr121(Adafruit_MPR121 *module, struct Mpr121Data *module_da
 
 uint8_t set_mpu6050_initialization(Adafruit_MPU6050 *module, uint8_t i2c_address)
 {
-        Serial.println("MPU6050 test!");
-
         if ((*module).begin(i2c_address)) {
                 Serial.println("MPU6050 found!");
                 Serial.println("");
                 
                 return 1;
         } else {
-                Serial.println("Failed to find MPU6050 chip");
+                Serial.println("MPU6050 not found, check wiring?");
                 Serial.println("");
 
                 return 0;
