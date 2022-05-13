@@ -33,6 +33,48 @@ void send_data_from_mpr121_by_bluetooth(struct Mpr121Data *module_data, uint8_t 
         message += String(" \n\n\n");
 
         send_string_via_bluetooth(&message);
+}
 
-        Serial.println(message);
+void send_data_from_capacitive_by_bluetooth(
+        struct CapacitiveData *module_data,
+        uint8_t device_type
+)
+{
+        String message;
+        
+        message = String("data ") + String(device_type) + String(" ") +
+                String(DATA_MESSAGE_TYPE_CAPACITIVE);
+
+        for (uint8_t i=0; i<4; i++) {
+                message += String(" ") + String((*module_data).pin[i]);
+        }
+
+        message += String(" \n\n\n");
+
+        send_string_via_bluetooth(&message);
+}
+
+void send_data_from_mpu6050_by_bluetooth(
+        struct Mpu6050Data *module_data,
+        uint8_t device_type
+)
+{
+        String message;
+        
+        message = String("data ") + String(device_type) + String(" ") +
+                String(DATA_MESSAGE_TYPE_MPU6050);
+
+        message += String(" ") + String((*module_data).acceleration_x);
+        message += String(" ") + String((*module_data).acceleration_y);
+        message += String(" ") + String((*module_data).acceleration_z);
+        
+        message += String(" ") + String((*module_data).rotation_x);
+        message += String(" ") + String((*module_data).rotation_y);
+        message += String(" ") + String((*module_data).rotation_z);
+        
+        message += String(" ") + String((*module_data).temperature);
+
+        message += String(" \n\n\n");
+
+        send_string_via_bluetooth(&message);      
 }

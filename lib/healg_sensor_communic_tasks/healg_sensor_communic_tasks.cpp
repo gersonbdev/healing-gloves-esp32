@@ -38,8 +38,36 @@ void mpr121_communic_task()
         }
 }
 
+struct CapacitiveData capacitive_data;
+
+void capacitive_communic_task()
+{
+        capacitive_data.pin[0] = touchRead(ESP32_TOUCH_PIN_9);
+        capacitive_data.pin[1] = touchRead(ESP32_TOUCH_PIN_8);
+        capacitive_data.pin[2] = touchRead(ESP32_TOUCH_PIN_7);
+        capacitive_data.pin[3] = touchRead(ESP32_TOUCH_PIN_6);
+
+        switch (HEALG_DEVICE_TYPE) {
+        case CHIEF_TYPE_DEVICE:
+
+                send_data_from_capacitive_by_bluetooth(
+                        &capacitive_data,
+                        HEALG_DEVICE_TYPE
+                );
+                
+                break;        
+        default:
+                break;
+        }
+
+
+}
+
+
 Adafruit_MPU6050 mpu6050_sensor;
+struct Mpu6050Data mpu6050_data;
 boolean mpu6050_status = false;
+
 
 void mpu6050_communic_task()
 {
@@ -57,32 +85,23 @@ void mpu6050_communic_task()
         switch (HEALG_DEVICE_TYPE) {
         case CHIEF_TYPE_DEVICE:
                 if (mpu6050_status) {
-                        /* Get new sensor events with the readings */
                         sensors_event_t a, g, temp;
                         mpu6050_sensor.getEvent(&a, &g, &temp);
 
-                        /* Print out the values */
-                        Serial.print("Acceleration X: ");
-                        Serial.print(a.acceleration.x);
-                        Serial.print(", Y: ");
-                        Serial.print(a.acceleration.y);
-                        Serial.print(", Z: ");
-                        Serial.print(a.acceleration.z);
-                        Serial.println(" m/s^2");
+                        mpu6050_data.acceleration_x = a.acceleration.x;
+                        mpu6050_data.acceleration_y = a.acceleration.y;
+                        mpu6050_data.acceleration_z = a.acceleration.z;
 
-                        Serial.print("Rotation X: ");
-                        Serial.print(g.gyro.x);
-                        Serial.print(", Y: ");
-                        Serial.print(g.gyro.y);
-                        Serial.print(", Z: ");
-                        Serial.print(g.gyro.z);
-                        Serial.println(" rad/s");
+                        mpu6050_data.rotation_x = g.gyro.x;
+                        mpu6050_data.rotation_y = g.gyro.y;
+                        mpu6050_data.rotation_z = g.gyro.z;
 
-                        Serial.print("Temperature: ");
-                        Serial.print(temp.temperature);
-                        Serial.println(" degC");
+                        mpu6050_data.temperature = temp.temperature;
 
-                        Serial.println("");
+                        send_data_from_mpu6050_by_bluetooth(
+                                &mpu6050_data,
+                                HEALG_DEVICE_TYPE
+                        );
                 }
                 break;        
         default:

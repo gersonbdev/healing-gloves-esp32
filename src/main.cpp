@@ -16,6 +16,7 @@ void setup()
 void loop()
 {
         mpr121_communic_task();
+        capacitive_communic_task();
         mpu6050_communic_task();
 
         delay(10);

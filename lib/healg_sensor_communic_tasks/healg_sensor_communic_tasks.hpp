@@ -4,5 +4,6 @@
 
 void mpr121_communic_task();
 void mpu6050_communic_task();
+void capacitive_communic_task();
 
 #endif
