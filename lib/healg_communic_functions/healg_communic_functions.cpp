@@ -19,7 +19,10 @@ void send_string_via_bluetooth(String *message)
 }
 
 
-void send_data_from_mpr121_by_bluetooth(struct Mpr121Data *module_data, uint8_t device_type)
+void send_data_from_mpr121_by_bluetooth(
+        uint8_t device_type,
+        struct Mpr121Data *module_data
+)
 {
         String message;
         
@@ -36,8 +39,8 @@ void send_data_from_mpr121_by_bluetooth(struct Mpr121Data *module_data, uint8_t 
 }
 
 void send_data_from_capacitive_by_bluetooth(
-        struct CapacitiveData *module_data,
-        uint8_t device_type
+        uint8_t device_type,
+        struct CapacitiveData *module_data
 )
 {
         String message;
@@ -55,8 +58,8 @@ void send_data_from_capacitive_by_bluetooth(
 }
 
 void send_data_from_mpu6050_by_bluetooth(
-        struct Mpu6050Data *module_data,
-        uint8_t device_type
+        uint8_t device_type,
+        struct Mpu6050Data *module_data
 )
 {
         String message;
@@ -77,4 +80,20 @@ void send_data_from_mpu6050_by_bluetooth(
         message += String(" \n\n\n");
 
         send_string_via_bluetooth(&message);      
+}
+
+void send_data_to_app_inventor(struct DataForAppInventor *message_data)
+{
+        String message;
+
+        message = String((*message_data).keystrokes + (*message_data).rotations);
+        message += String(' ');
+
+        message += String((*message_data).keystrokes);
+        message += String(' ');
+
+        message += String((*message_data).rotations);
+        message += String("\n\n");
+
+        send_string_via_bluetooth(&message);  
 }

@@ -2,8 +2,8 @@
 
 #define healg_sensor_communic_tasks_hpp
 
-void mpr121_communic_task();
-void mpu6050_communic_task();
-void capacitive_communic_task();
+void keystrokes_task();
+void rotations_task();
+void communication_task();
 
 #endif

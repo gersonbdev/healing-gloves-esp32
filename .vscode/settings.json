@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "healg_definitions.h": "c",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "random": "cpp"
     }
 }

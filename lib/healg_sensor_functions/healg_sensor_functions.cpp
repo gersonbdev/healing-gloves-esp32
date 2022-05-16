@@ -31,6 +31,14 @@ void save_data_from_mpr121(Adafruit_MPR121 *module, struct Mpr121Data *module_da
         }
 }
 
+void save_data_from_capacitive(struct CapacitiveData *module_data)
+{        
+        (*module_data).pin[0] = touchRead(ESP32_TOUCH_PIN_9);
+        (*module_data).pin[1] = touchRead(ESP32_TOUCH_PIN_8);
+        (*module_data).pin[2] = touchRead(ESP32_TOUCH_PIN_7);
+        (*module_data).pin[3] = touchRead(ESP32_TOUCH_PIN_6);
+}
+
 
 uint8_t set_mpu6050_initialization(Adafruit_MPU6050 *module, uint8_t i2c_address)
 {
@@ -113,4 +121,77 @@ void set_mpu6050_calibration(Adafruit_MPU6050 *module)
         }
 
         Serial.println("");
+}
+
+void save_data_from_mpu6050(
+        Adafruit_MPU6050 *module,
+        struct Mpu6050Data *module_data
+)
+{        
+        sensors_event_t a, g, temp;
+        (*module).getEvent(&a, &g, &temp);
+
+        (*module_data).acceleration_x = a.acceleration.x;
+        (*module_data).acceleration_y = a.acceleration.y;
+        (*module_data).acceleration_z = a.acceleration.z;
+
+        (*module_data).rotation_x = g.gyro.x;
+        (*module_data).rotation_y = g.gyro.y;
+        (*module_data).rotation_z = g.gyro.z;
+
+        (*module_data).temperature = temp.temperature;
+}
+
+void wipe_mpu6050_data(struct Mpu6050Data *module_data)
+{
+        (*module_data).acceleration_x = 0;
+        (*module_data).acceleration_y = 0;
+        (*module_data).acceleration_z = 0;
+
+        (*module_data).rotation_x = 0;
+        (*module_data).rotation_y = 0;
+        (*module_data).rotation_z = 0;
+
+        (*module_data).temperature = 0;
+}
+
+void differentiate_mpu6050_data(
+        struct Mpu6050Data *minuend,
+        struct Mpu6050Data *subtrahend,
+        struct Mpu6050Data *difference
+)
+{
+        (*difference).acceleration_x = 
+                (*minuend).acceleration_x - (*subtrahend).acceleration_x;
+        (*difference).acceleration_y =
+                (*minuend).acceleration_y - (*subtrahend).acceleration_y;
+        (*difference).acceleration_z =
+                (*minuend).acceleration_z - (*subtrahend).acceleration_z;
+
+        (*difference).rotation_x =
+                (*minuend).rotation_x - (*subtrahend).rotation_x;
+        (*difference).rotation_y =
+                (*minuend).rotation_y - (*subtrahend).rotation_y;
+        (*difference).rotation_z =
+                (*minuend).rotation_z - (*subtrahend).rotation_z;
+
+        (*difference).temperature =
+                (*minuend).temperature - (*subtrahend).temperature;
+}
+
+boolean find_rotation_change_mpu6050(struct Mpu6050Data *module_data)
+{
+        if ((*module_data).rotation_x > 1) {
+                return true;
+        }
+
+        if ((*module_data).rotation_y > 1) {
+                return true;
+        }
+
+        if ((*module_data).rotation_z > 1) {
+                return true;
+        }
+
+        return false;
 }
