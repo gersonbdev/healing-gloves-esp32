@@ -5,11 +5,11 @@
 #include <Adafruit_MPU6050.h>
 
 #include "healg_definitions.hpp"
-#include "healg_sensor_functions.hpp"
-#include "healg_communic_functions.hpp"
-#include "healg_sensor_communic_tasks.hpp"
+#include "sensor_utilities.hpp"
+#include "communic_utilities.hpp"
+#include "healg_tasks.hpp"
 
-struct DataForAppInventor data_for_app_inventor;
+struct ShippingDataSummary shipping_data_summary;
 
 Adafruit_MPR121 mpr121_sensor;
 struct Mpr121Data mpr121_data;
@@ -19,6 +19,8 @@ struct CapacitiveData capacitive_data;
 
 void keystrokes_task()
 {
+        String message = "";
+        
         if (!mpr121_status) {
                 mpr121_status = set_mpr121_initialization(
                         &mpr121_sensor,
@@ -26,20 +28,24 @@ void keystrokes_task()
                 );
         } else {
                 save_data_from_mpr121(&mpr121_sensor, &mpr121_data);
-                save_data_from_capacitive(&capacitive_data);
 
                 for (uint8_t i=0; i<12; i++) {
-                        if (mpr121_data.pin[i]<30) {
-                                (data_for_app_inventor.keystrokes)++;
+                        message += String(mpr121_data.pin[i]);
+                        message += String(" ");
+                        
+                        if (mpr121_data.pin[i]<200) {
+                                (shipping_data_summary.keystrokes)++;
                         }
                 }
-
-                for (uint8_t i=0; i<4; i++) {
-                        if (capacitive_data.pin[i]==0) {
-                                (data_for_app_inventor.keystrokes)++;
-                        }
-                }
+                Serial.println(message);
         }
+
+        // save_data_from_capacitive(&capacitive_data);
+        // for (uint8_t i=0; i<4; i++) {
+        //         if (capacitive_data.pin[i]==0) {
+        //                 (shipping_data_summary.keystrokes)++;
+        //         }
+        // }
 }
 
 Adafruit_MPU6050 mpu6050_sensor;
@@ -68,7 +74,7 @@ void rotations_task()
                 );
 
                 if (find_rotation_change_mpu6050(&mpu6050_exchange_data)) {
-                        (data_for_app_inventor.rotations)++;
+                        (shipping_data_summary.rotations)++;
                 }
                 
                 mpu6050_previous_data = mpu6050_data;
@@ -77,13 +83,8 @@ void rotations_task()
 
 void communication_task()
 {
-        switch (HEALG_DEVICE_TYPE) {
-        case CHIEF_TYPE_DEVICE:
-                if (mpu6050_status) {
-                        send_data_to_app_inventor(&data_for_app_inventor);
-                }
-                break;
-        default:
-                break;
-        }
+        keystrokes_task();
+        rotations_task();
+
+        send_summary_data_via_bluetooth(&shipping_data_summary);
 }

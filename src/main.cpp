@@ -2,7 +2,8 @@
 #include <BluetoothSerial.h>
 
 #include "healg_definitions.hpp"
-#include "healg_sensor_communic_tasks.hpp"
+#include "healg_tasks.hpp"
+#include "communic_utilities.hpp"
 
 BluetoothSerial SerialBT;
 
@@ -14,9 +15,8 @@ void setup()
 
 
 void loop()
-{
-        keystrokes_task();
-        rotations_task();
+{   
         communication_task();
+
         delay(100);
 }

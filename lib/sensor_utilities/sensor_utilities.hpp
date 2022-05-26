@@ -1,6 +1,6 @@
-#ifndef healg_sensor_functions_hpp
+#ifndef sensor_utilities_hpp
 
-#define healg_sensor_functions_hpp
+#define sensor_utilities_hpp
 
 struct Mpr121Data {
         uint16_t pin[12];

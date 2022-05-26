@@ -5,7 +5,7 @@
 #include <Adafruit_MPU6050.h>
 
 #include "healg_definitions.hpp"
-#include "healg_sensor_functions.hpp"
+#include "sensor_utilities.hpp"
 
 
 uint8_t set_mpr121_initialization(Adafruit_MPR121 *module, uint8_t i2c_address)
@@ -32,11 +32,11 @@ void save_data_from_mpr121(Adafruit_MPR121 *module, struct Mpr121Data *module_da
 }
 
 void save_data_from_capacitive(struct CapacitiveData *module_data)
-{        
-        (*module_data).pin[0] = touchRead(ESP32_TOUCH_PIN_9);
-        (*module_data).pin[1] = touchRead(ESP32_TOUCH_PIN_8);
-        (*module_data).pin[2] = touchRead(ESP32_TOUCH_PIN_7);
-        (*module_data).pin[3] = touchRead(ESP32_TOUCH_PIN_6);
+{
+        (*module_data).pin[0] = touchRead(ESP32_TOUCH_PIN_6);
+        (*module_data).pin[1] = touchRead(ESP32_TOUCH_PIN_7);
+        (*module_data).pin[2] = touchRead(ESP32_TOUCH_PIN_8);
+        (*module_data).pin[3] = touchRead(ESP32_TOUCH_PIN_9);
 }
 
 
